@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Ranking Smiling Friends</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+/* ========= ESTILOS ========== */
+
+:root {
+  --bg: #070819;
+  --text: #f5f6fa;
+  --text-muted: #b7b8c9;
+  --card-bg: #161a2e;
+  --accent: #ff9b4a;
+  --accent2: #ff63b2;
+  --radius: 18px;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #0b0d20, #121429);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.app {
+  width: 100%;
+  max-width: 1100px;
+  background: #0d0f24cc;
+  padding: 24px;
+  border-radius: 24px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.5);
+}
+
+/* Selector temporadas */
+.filter {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter select {
+  background: var(--card-bg);
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: var(--text);
+  border: 1px solid #2b2e4a;
+  font-size: 0.9rem;
+}
+
+/* Comparación */
+.compare-area {
+  margin-top: 20px;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  gap: 14px;
+  margin-top: 20px;
+  align-items: center;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid #2f3259;
+  cursor: pointer;
+  transition: 0.2s;
+  height: 340px;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+}
+
+.card img {
+  width: 100%;
+  height: 270px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 10px 12px;
+}
+
+.card-body h3 {
+  margin: 4px 0;
+  font-size: 1rem;
+}
+
+.card-body .meta {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/* VS */
+.vs {
+  text-align: center;
+  font-weight: bold;
+  color: var(--text-muted);
+}
+
+/* BOTÓN DESHACER */
+.undo-btn {
+  margin-top: 15px;
+  background: transparent;
+  color: var(--accent2);
+  border: 1px solid var(--accent2);
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.undo-btn:hover {
+  background: #ff63b222;
+}
+
+/* Ranking */
+.final-ranking {
+  display: none;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.final-ranking h1 {
+  margin-bottom: 20px;
+}
+
+.ranking-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px auto;
+  max-width: 500px;
+  text-align: left;
+}
+
+.ranking-list li {
+  background: var(--card-bg);
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: var(--radius);
+  border: 1px solid #2c2e4b;
+}
+
+/* Botones finales */
+.final-controls {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  align-items: baseline;
+}
+
+.final-btn {
+  background: var(--accent);
+  border: none;
+  padding: 10px 24px;
+  color: #000;
+  font-weight: bold;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.final-btn:hover {
+  opacity: 0.9;
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<h1>Ranking Smiling Friends</h1>
+
+<div class="filter">
+  <label>Temporadas:</label>
+  <select id="seasonFilter">
+    <option value="all">Todas</option>
+    <option value="1">Solo Temporada 1</option>
+    <option value="2">Solo Temporada 2</option>
+  </select>
+
+</div>
+
+<div>
+  <div id="progress"></div>
+</div>
+
+
+<!-- =============================
+     ÁREA DE COMPARACIÓN
+============================== -->
+<div class="compare-area" id="compareArea">
+
+  <h2>Elegí tu favorito</h2>
+
+  <div class="cards-container" id="cardsContainer">
+
+    <div class="card" id="leftCard">
+      <img id="leftImg">
+      <div class="card-body">
+        <h3 id="leftTitle"></h3>
+        <div class="meta" id="leftMeta"></div>
+      </div>
+    </div>
+
+    <div class="vs">VS</div>
+
+    <div class="card" id="rightCard">
+      <img id="rightImg">
+      <div class="card-body">
+        <h3 id="rightTitle"></h3>
+        <div class="meta" id="rightMeta"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="undo-btn" id="undoBtn">Deshacer</button>
+
+</div>
+
+
+
+<!-- =============================
+     RANKING FINAL
+============================== -->
+<div class="final-ranking" id="finalRanking">
+
+  <h1>🏆 Ranking Final</h1>
+
+  <ul class="ranking-list" id="rankingList"></ul>
+
+  <div class="final-controls">
+    <button class="final-btn" id="retryBtn">Volver a hacerlo</button>
+    <button class="undo-btn" id="undoFinal">Deshacer última elección</button>
+  </div>
+
+</div>
+
+</div>
+
+<script>
+/* ================================
+   EPISODIOS (TEMPORADAS 1 y 2)
+================================ */
+
+const EPISODES = [
+  /* TEMPORADA 1 */
+  {id:"s1e1",season:1,number:1,title:"Desmond's Big Day Out",img:"/img/desmond.jpg"},
+  {id:"s1e2",season:1,number:2,title:"Mr. Frog",img:"/img/mr-frog.jpg"},
+  {id:"s1e3",season:1,number:3,title:"Shrimp's Odyssey",img:"/img/shrimp.png"},
+  {id:"s1e4",season:1,number:4,title:"A Silly Halloween Special",img:"/img/halloween.jpg"},
+  {id:"s1e5",season:1,number:5,title:"Who Murdered Simon S. Salty?",img:"/img/simon-salty.jpg"},
+  {id:"s1e6",season:1,number:6,title:"Enchanted Forest",img:"/img/forest.jpg"},
+  {id:"s1e7",season:1,number:7,title:"Frowning Friends",img:"/img/frowning.jpg"},
+  {id:"s1e8",season:1,number:8,title:"Charlie Dies and Doesn't Come Back",img:"/img/charlie-dies.jpg"},
+  {id:"s1e9",season:1,number:9,title:"Smiling Friends Go to Brazil!",img:"/img/brazil.jpg"},
+
+  /* TEMPORADA 2 */
+  {id:"s2e1",season:2,number:1,title:"Gwimbly DX Remastered",img:"/img/gwimbly.jpg"},
+  {id:"s2e2",season:2,number:2,title:"Mr. President",img:"/img/mr-president.png"},
+  {id:"s2e3",season:2,number:3,title:"A Allan Adventure",img:"/img/allan-adventure.jpg"},
+  {id:"s2e4",season:2,number:4,title:"Boss Finds Love?",img:"/img/boss-love.jpg"},
+  {id:"s2e5",season:2,number:5,title:"Brother's Egg",img:"/img/egg.png"},
+  {id:"s2e6",season:2,number:6,title:"Charlie, Pim & Bill vs Alien",img:"/img/alien.jpg"},
+  {id:"s2e7",season:2,number:7,title:"The Magical Red Jewel",img:"/img/jewel.webp"},
+  {id:"s2e8",season:2,number:8,title:"Pim Finally Turns Green",img:"/img/pim-green.jpg"}
+];
+
+/* ================================
+   ESTADO
+================================ */
+
+let seasonFilter = "all";
+let pairs = [];
+let index = 0;
+let scores = {};
+let history = []; // guarda decisiones para deshacer
+
+/* ================================
+   INICIALIZACIÓN
+================================ */
+
+const leftCard = document.getElementById("leftCard");
+const rightCard = document.getElementById("rightCard");
+
+const leftImg = document.getElementById("leftImg");
+const rightImg = document.getElementById("rightImg");
+
+const leftTitle = document.getElementById("leftTitle");
+const rightTitle = document.getElementById("rightTitle");
+
+const leftMeta = document.getElementById("leftMeta");
+const rightMeta = document.getElementById("rightMeta");
+
+const progress = document.getElementById("progress");
+const compareArea = document.getElementById("compareArea");
+const finalRanking = document.getElementById("finalRanking");
+
+const rankingList = document.getElementById("rankingList");
+
+
+document.getElementById("seasonFilter").addEventListener("change", e => {
+  seasonFilter = e.target.value;
+  start();
+});
+
+document.getElementById("undoBtn").addEventListener("click", undo);
+document.getElementById("undoFinal").addEventListener("click", undo);
+document.getElementById("retryBtn").addEventListener("click", start);
+
+/* ================================
+   LÓGICA PRINCIPAL
+================================ */
+
+function start() {
+  const eps = EPISODES.filter(ep =>
+    seasonFilter === "all" ? true : ep.season == seasonFilter
+  );
+
+  // reiniciar estado
+  scores = {};
+  history = [];
+  pairs = [];
+  index = 0;
+
+  eps.forEach(a => eps.forEach(b => {
+    if (a.id < b.id) pairs.push([a, b]);
+  }));
+
+  shuffle(pairs);
+
+  compareArea.style.display = "block";
+  finalRanking.style.display = "none";
+
+  showPair();
+  updateProgress();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function showPair() {
+  if (index >= pairs.length) return showFinalRanking();
+
+  const [A, B] = pairs[index];
+
+  leftImg.src = A.img;
+  leftTitle.textContent = A.title;
+  leftMeta.textContent = `T${A.season} · E${A.number}`;
+
+  rightImg.src = B.img;
+  rightTitle.textContent = B.title;
+  rightMeta.textContent = `T${B.season} · E${B.number}`;
+
+  leftCard.onclick = () => choose(A, B);
+  rightCard.onclick = () => choose(B, A);
+}
+
+function choose(winner, loser) {
+  if (!scores[winner.id]) scores[winner.id] = {w:0,l:0};
+  if (!scores[loser.id])  scores[loser.id]  = {w:0,l:0};
+
+  scores[winner.id].w++;
+  scores[loser.id].l++;
+
+  // guardamos en historial para deshacer
+  history.push({winner, loser});
+
+  index++;
+  updateProgress();
+  showPair();
+}
+
+function undo() {
+  if (history.length === 0) return;
+
+  const last = history.pop();
+  scores[last.winner.id].w--;
+  scores[last.loser.id].l--;
+
+  index--;
+  if (index < 0) index = 0;
+
+  compareArea.style.display = "block";
+  finalRanking.style.display = "none";
+
+  updateProgress();
+  showPair();
+}
+
+function updateProgress() {
+  progress.textContent = pairs.length > 0
+    ? `${index} / ${pairs.length} comparaciones`
+    : "";
+}
+
+/* ================================
+   RANKING FINAL
+================================ */
+
+function showFinalRanking() {
+  compareArea.style.display = "none";
+  finalRanking.style.display = "block";
+
+  const eps = EPISODES.filter(ep =>
+    seasonFilter === "all" ? true : ep.season == seasonFilter
+  );
+
+  const ranked = eps
+    .map(ep => ({
+      ep,
+      score: (scores[ep.id]?.w || 0) - (scores[ep.id]?.l || 0)
+    }))
+    .sort((a,b) => b.score - a.score);
+
+  rankingList.innerHTML = "";
+
+  ranked.forEach((r, i) => {
+    const li = document.createElement("li");
+    li.textContent = `${i+1}. ${r.ep.title} (T${r.ep.season}E${r.ep.number})`;
+    rankingList.appendChild(li);
+  });
+}
+
+/* ================================
+   START
+================================ */
+start();
+
+</script>
+
+</body>
+</html>
