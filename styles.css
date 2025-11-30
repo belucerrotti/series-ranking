@@ -1,0 +1,217 @@
+/* ========= ESTILOS ========== */
+
+:root {
+  --bg: #070819;
+  --text: #f5f6fa;
+  --text-muted: #b7b8c9;
+  --card-bg: #161a2e;
+  --accent: #ff9b4a;
+  --accent2: #ff63b2;
+  --radius: 18px;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #0b0d20, #121429);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.app {
+  width: 100%;
+  max-width: 1100px;
+  background: #0d0f24cc;
+  padding: 24px;
+  border-radius: 24px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.5);
+}
+
+/* Selector temporadas */
+.filter {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter select {
+  background: var(--card-bg);
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: var(--text);
+  border: 1px solid #2b2e4a;
+  font-size: 0.9rem;
+}
+
+/* Comparación */
+.compare-area {
+  margin-top: 20px;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  gap: 14px;
+  margin-top: 20px;
+  align-items: center;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid #2f3259;
+  cursor: pointer;
+  transition: 0.2s;
+  height: 340px;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+}
+
+.card img {
+  width: 100%;
+  height: 270px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 10px 12px;
+}
+
+.card-body h3 {
+  margin: 4px 0;
+  font-size: 1rem;
+}
+
+.card-body .meta {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/* VS */
+.vs {
+  text-align: center;
+  font-weight: bold;
+  color: var(--text-muted);
+}
+
+/* BOTÓN DESHACER */
+.undo-btn {
+  margin-top: 15px;
+  background: transparent;
+  color: var(--accent2);
+  border: 1px solid var(--accent2);
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.undo-btn:hover {
+  background: #ff63b222;
+}
+
+/* Ranking */
+.final-ranking {
+  display: none;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.final-ranking h1 {
+  margin-bottom: 20px;
+}
+
+.ranking-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px auto;
+  max-width: 500px;
+  text-align: left;
+}
+
+.ranking-list li {
+  background: var(--card-bg);
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: var(--radius);
+  border: 1px solid #2c2e4b;
+}
+
+/* Botones finales */
+.final-controls {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  align-items: baseline;
+}
+
+.final-btn {
+  background: var(--accent);
+  border: none;
+  padding: 10px 24px;
+  color: #000;
+  font-weight: bold;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.final-btn:hover {
+  opacity: 0.9;
+}
+
+#progress {
+  display: none;
+}
+
+/* ===========================
+   ESTILOS EXTRA PARA MOBILE
+   (NO toca el desktop)
+=========================== */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .app {
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .compare-area h2 {
+    font-size: 1.1rem;
+  }
+
+  .cards-container {
+    grid-template-columns: 1fr;   /* una columna */
+    gap: 12px;
+  }
+
+  .cards-container .vs {
+    display: none;                /* ocultar "VS" en mobile */
+  }
+
+  .card {
+    height: auto;                 /* que crezca según contenido */
+  }
+
+  .card img {
+    height: 210px;                /* un poco más baja para que no se corte */
+  }
+
+  .undo-btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .ranking-list {
+    margin: 16px auto;
+  }
+}
