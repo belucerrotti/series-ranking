@@ -25,9 +25,9 @@ const EPISODES = [
   {id:"s3e3",season:3,number:3,title:"Mole Man",img:"img/mole-man.jpg"},
   {id:"s3e4",season:3,number:4,title:"Curse of the Green Halloween Witch",img:"img/witch.webp"},
   {id:"s3e5",season:3,number:5,title:"Pim and Charlie Save Mother Nature",img:"img/mother-nature.webp"},
-  // {id:"s3e6",season:3,number:6,title:"Squim Returns",img:"img/squim-returns.jpg"},
-  // {id:"s3e7",season:3,number:7,title:"Shmaloogles",img:"img/shmaloogles.jpg"},
-  // {id:"s3e8",season:3,number:8,title:"The Glep Ep",img:"img/glep-ep.jpg"}
+  {id:"s3e6",season:3,number:6,title:"Squim Returns",img:"img/squim-returns.webp"},
+  {id:"s3e7",season:3,number:7,title:"Shmaloogles",img:"img/pitufos.webp"},
+  {id:"s3e8",season:3,number:8,title:"The Glep Ep",img:"img/glep-ep.webp"}
 ];
 
 /* ============================================================
